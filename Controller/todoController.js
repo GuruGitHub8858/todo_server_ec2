@@ -3,31 +3,14 @@ import todoCollection from "../Model/todoModel.js";
 // store my todo    req.body  hello luffy
 export const addTodo = async (req, res) => {
     try {
-        const { todo } = req.body;
-
-        // validation
-        if (!todo || typeof todo !== "string") {
-            return res.status(400).json({
-                message: "todo must be a non-empty string"
-            });
-        }
-
-        const data = new todoCollection({
-            todo: todo.trim()
-        });
-
-        await data.save();
-
-        res.status(201).json({
-            message: "data has been stored",
-            data
-        });
-
+        const data = new todoCollection(req.body);
+        await data.save()
+        res.status(201).json({ mess: "data has been stored" })
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(400).json({ message: err })
     }
-};
 
+}
 
 export const getTodo = async (req, res) => {
     try {
