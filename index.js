@@ -12,7 +12,13 @@ const app = express()
 
 connectDb();
 
-app.use(cors())
+app.use(cors({
+    origin: true,   // ← IMPORTANT
+    credentials: true,
+}));
+
+app.options("*", cors());
+
 app.use(express.json())
 
 // http://localhost:5000/csbs
