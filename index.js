@@ -12,15 +12,7 @@ const app = express()
 
 connectDb();
 
-//middle wares
-app.use(cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-}));
-
-// VERY IMPORTANT: handle preflight
-app.options("*", cors());
+app.use(cors())
 app.use(express.json())
 
 // http://localhost:5000/csbs
