@@ -12,7 +12,7 @@ const app = express()
 
 connectDb();
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
@@ -30,8 +30,3 @@ app.use("/api/happy", (req, res) => {
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`app is listening on port ${PORT}`);
 });
-
-
-
-
-
