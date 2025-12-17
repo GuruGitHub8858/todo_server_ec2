@@ -18,6 +18,11 @@ app.use(express.json())
 
 // http://localhost:5000/csbs
 app.use('/csbs', route);
+app.use("/api/happy", (req, res) => {
+    return res.status(200).json({
+        message: "sound is great guy"
+    })
+})
 
 app.listen(PORT, () => {
     console.log(`app is listening in ${PORT}`);
