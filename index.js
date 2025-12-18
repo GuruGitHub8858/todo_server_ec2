@@ -11,22 +11,42 @@ const PORT = process.env.PORT || 5000
 const app = express()
 
 connectDb();
-app.use(cors({
-    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
-}));
 
-app.use(express.json())
+app.use(cors())
 
 // http://localhost:5000/csbs
 app.use('/csbs', route);
+
 app.use("/api/happy", (req, res) => {
     return res.status(200).json({
-        message: "sound isssssssss great guy"
+        message: "i have enjoyed with csbs students"
     })
 })
 
-app.listen(PORT, "0.0.0.0", () => {
-    console.log(`app is listening on port ${PORT}`);
+// Global error handler
+app.use((err, req, res, next) => {
+    console.error(`${new Date().toISOString()} - Error:`, err.stack)
+    res.status(500).json({ error: 'Something broke!' })
+})
+
+// 404 handler
+app.use('*', (req, res) => {
+    res.status(404).json({ error: 'Route not found' })
+})
+
+const server = app.listen(PORT, "0.0.0.0", () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`📡 Access URLs:`);
+    console.log(`   Local: http://localhost:${PORT}`);
+    console.log(`   Network: http://0.0.0.0:${PORT}`);
+    console.log(`   Public: http://52.90.2.228:${PORT} (if accessible)`);
+});
+
+// Graceful shutdown
+process.on('SIGINT', () => {
+    console.log('\nShutting down gracefully...');
+    server.close(() => {
+        console.log('Process terminated!');
+        process.exit(0);
+    });
 });
