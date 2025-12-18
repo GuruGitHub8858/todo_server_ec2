@@ -18,7 +18,11 @@ connectDb();
 /* ======================
    Middlewares
 ====================== */
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
 app.use(express.json()); // IMPORTANT for POST/PUT
 
 /* ======================
@@ -36,23 +40,24 @@ app.get("/api/happy", (req, res) => {
 });
 
 /* ======================
-   Global Error Handler
+   404 Handler (CORRECTED ✅)
+   MUST be AFTER all routes
 ====================== */
-app.use((err, req, res, next) => {
-    console.error(`${new Date().toISOString()} - Error:`, err.stack);
-    res.status(500).json({
+app.use("*", (req, res) => {
+    res.status(404).json({
         success: false,
-        message: "Something went wrong",
+        message: "Route not found",
     });
 });
 
 /* ======================
-   404 Handler (FIXED ✅)
+   Global Error Handler
 ====================== */
-app.use("/*", (req, res) => {
-    res.status(404).json({
+app.use((err, req, res, next) => {
+    console.error(`${new Date().toISOString()} - Error:`, err.stack);
+    res.status(err.status || 500).json({
         success: false,
-        message: "Route not found",
+        message: err.message || "Something went wrong",
     });
 });
 
@@ -63,7 +68,6 @@ const server = app.listen(PORT, "0.0.0.0", () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`📡 Access URLs:`);
     console.log(`   Local:   http://localhost:${PORT}`);
-    console.log(`   Network: http://0.0.0.0:${PORT}`);
     console.log(`   Public:  http://52.90.2.228:${PORT}`);
 });
 
